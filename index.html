@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>leakz.fun - Media Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Canvas for animated dots -->
+    <canvas id="backgroundCanvas"></canvas>
+    
+    <!-- Cursor Dot -->
+    <div id="cursor" class="cursor-dot"></div>
+    
+    <!-- Navigation Menu -->
+    <nav class="nav-menu">
+        <div class="nav-item active" data-source="mega1" data-label="MEGA Folder 1">
+            <span class="nav-label">MEGA Folder 1</span>
+        </div>
+        <div class="nav-item" data-source="mega2" data-label="MEGA Folder 2">
+            <span class="nav-label">MEGA Folder 2</span>
+        </div>
+        <div class="nav-item" data-source="leakz" data-label="leakz.fun">
+            <span class="nav-label">leakz.fun</span>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Source Title -->
+        <div class="source-title">Browsing: <span id="currentSource">MEGA Folder 1</span></div>
+
+        <!-- Loading State -->
+        <div id="loadingSpinner" class="loading-spinner hidden">
+            <div class="spinner"></div>
+            <p>Loading media...</p>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div id="gallery" class="gallery">
+            <!-- Media items will be inserted here -->
+        </div>
+
+        <!-- Modal for full view -->
+        <div id="modal" class="modal hidden">
+            <span class="close-modal">&times;</span>
+            <div class="modal-content">
+                <div id="modalMedia"></div>
+                <p id="modalCaption" class="modal-caption"></p>
+                <div class="modal-nav">
+                    <button id="prevBtn" class="modal-btn">← Previous</button>
+                    <button id="nextBtn" class="modal-btn">Next →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
