@@ -6,16 +6,16 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const dots = [];
-const dotCount = 50;
+const dotCount = 60;
 
 class Dot {
     constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.radius = Math.random() * 1.5 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.5;
-        this.speedY = (Math.random() - 0.5) * 0.5;
-        this.opacity = Math.random() * 0.5 + 0.3;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = (Math.random() - 0.5) * 0.4;
+        this.opacity = Math.random() * 0.6 + 0.2;
     }
 
     update() {
@@ -49,16 +49,17 @@ function animateBackground() {
         dot.draw();
     });
 
-    // Draw connections between nearby dots
+    // Draw connections with cyan color
     for (let i = 0; i < dots.length; i++) {
         for (let j = i + 1; j < dots.length; j++) {
             const dx = dots[i].x - dots[j].x;
             const dy = dots[i].y - dots[j].y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < 150) {
-                ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - distance / 150)})`;
-                ctx.lineWidth = 0.5;
+            if (distance < 120) {
+                const alpha = (1 - distance / 120) * 0.15;
+                ctx.strokeStyle = `rgba(0, 255, 255, ${alpha})`;
+                ctx.lineWidth = 1;
                 ctx.beginPath();
                 ctx.moveTo(dots[i].x, dots[i].y);
                 ctx.lineTo(dots[j].x, dots[j].y);
@@ -91,99 +92,133 @@ document.addEventListener('mousemove', (e) => {
 });
 
 // ==================== MEDIA GALLERY ====================
-const gallery = document.getElementById('gallery');
-const loadingSpinner = document.getElementById('loadingSpinner');
+const navItems = document.querySelectorAll('.nav-item');
+const mediaSections = document.querySelectorAll('.media-section');
 const modal = document.getElementById('modal');
 const modalMedia = document.getElementById('modalMedia');
 const modalCaption = document.getElementById('modalCaption');
 const closeModal = document.querySelector('.close-modal');
-const currentSourceSpan = document.getElementById('currentSource');
-const navItems = document.querySelectorAll('.nav-item');
 
-let currentMediaArray = [];
-let currentMediaIndex = 0;
+let allMediaItems = [];
+let currentModalIndex = 0;
 
-// MEGA Folder configurations
-const mediaConfigs = {
-    mega1: {
-        label: 'MEGA Folder 1',
-        url: 'https://mega.nz/folder/qRkyjTpb#rl8oiMaH5TRilXg2IDP20A/folder/XN1m2DDQ',
-        type: 'mega'
-    },
-    mega2: {
-        label: 'MEGA Folder 2',
-        url: 'https://mega.nz/folder/7vonTSbK#TlyyDVsXGC1xO327t6pAtw/folder/765miLDD',
-        type: 'mega'
-    },
-    leakz: {
-        label: 'leakz.fun',
-        url: 'https://leakz.fun',
-        type: 'website'
+// Load media from folders
+async function loadAllMedia() {
+    allMediaItems = [];
+    
+    const sections = [
+        { id: 'mega1', folder: 'media/mega1' },
+        { id: 'mega2', folder: 'media/mega2' },
+        { id: 'leakz', folder: 'media/leakz' }
+    ];
+
+    for (const section of sections) {
+        try {
+            const response = await fetch(`https://api.github.com/repos/dayers402-source/MySOurce/contents/${section.folder}`);
+            if (response.ok) {
+                const files = await response.json();
+                const mediaFiles = files.filter(f => {
+                    const ext = f.name.split('.').pop().toLowerCase();
+                    return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'webm'].includes(ext);
+                });
+
+                mediaFiles.forEach(file => {
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    const isVideo = ['mp4', 'webm'].includes(ext);
+                    
+                    allMediaItems.push({
+                        name: file.name,
+                        type: isVideo ? 'video' : 'image',
+                        url: file.download_url,
+                        section: section.id
+                    });
+                });
+            }
+        } catch (error) {
+            console.log(`No media found in ${section.folder}`);
+        }
     }
-};
 
-// Load media from source (simulated - will need backend integration)
-async function loadMedia(source) {
-    loadingSpinner.classList.remove('hidden');
-    gallery.innerHTML = '';
+    renderGalleries();
+}
 
-    const config = mediaConfigs[source];
-    currentSourceSpan.textContent = config.label;
+function renderGalleries() {
+    const sections = {
+        mega1: document.querySelector('.mega1-gallery'),
+        mega2: document.querySelector('.mega2-gallery'),
+        leakz: document.querySelector('.leakz-gallery')
+    };
 
-    try {
-        // Simulate loading delay
-        await new Promise(resolve => setTimeout(resolve, 800));
+    // Clear all galleries
+    Object.values(sections).forEach(gallery => gallery.innerHTML = '');
 
-        // Create sample media items
-        currentMediaArray = [
-            { type: 'image', src: 'https://via.placeholder.com/400x400?text=Image+1', label: 'Sample Image 1' },
-            { type: 'image', src: 'https://via.placeholder.com/400x400?text=Image+2', label: 'Sample Image 2' },
-            { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4', label: 'Sample Video 1' },
-            { type: 'image', src: 'https://via.placeholder.com/400x400?text=Image+3', label: 'Sample Image 3' },
-        ];
+    // Group media by section
+    const grouped = {
+        mega1: allMediaItems.filter(m => m.section === 'mega1'),
+        mega2: allMediaItems.filter(m => m.section === 'mega2'),
+        leakz: allMediaItems.filter(m => m.section === 'leakz')
+    };
 
-        // Populate gallery
-        currentMediaArray.forEach((media, index) => {
+    // Render each section
+    Object.entries(grouped).forEach(([sectionId, items]) => {
+        const gallery = sections[sectionId];
+        const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+        const itemCount = section.querySelector('.item-count');
+        
+        itemCount.textContent = `${items.length} items`;
+
+        if (items.length === 0) {
+            gallery.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">📂 No media files yet</p>';
+            return;
+        }
+
+        items.forEach((media, index) => {
             const item = document.createElement('div');
             item.className = 'gallery-item';
-            item.onclick = () => openModal(index);
+            item.onclick = () => openModal(sectionId, index);
 
             if (media.type === 'image') {
                 item.innerHTML = `
-                    <img src="${media.src}" alt="${media.label}" loading="lazy">
+                    <img src="${media.url}" alt="${media.name}" loading="lazy">
                     <div class="media-type">IMAGE</div>
-                    <div class="gallery-item-label">${media.label}</div>
+                    <div class="gallery-item-overlay">
+                        <p class="gallery-item-label">${media.name}</p>
+                    </div>
                 `;
             } else {
                 item.innerHTML = `
                     <video preload="metadata">
-                        <source src="${media.src}" type="video/mp4">
+                        <source src="${media.url}" type="video/mp4">
                     </video>
                     <div class="media-type">VIDEO</div>
-                    <div class="gallery-item-label">${media.label}</div>
+                    <div class="gallery-item-overlay">
+                        <p class="gallery-item-label">${media.name}</p>
+                    </div>
                 `;
             }
 
             gallery.appendChild(item);
         });
-    } catch (error) {
-        console.error('Error loading media:', error);
-        gallery.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">Error loading media. Please try again.</p>';
-    } finally {
-        loadingSpinner.classList.add('hidden');
-    }
+    });
 }
 
-// Open modal
-function openModal(index) {
-    currentMediaIndex = index;
-    const media = currentMediaArray[index];
+function openModal(sectionId, index) {
+    const sectionMedia = allMediaItems.filter(m => m.section === sectionId);
+    currentModalIndex = index;
+    displayModalMedia(sectionId, index);
+    modal.classList.remove('hidden');
+}
 
+function displayModalMedia(sectionId, index) {
+    const sectionMedia = allMediaItems.filter(m => m.section === sectionId);
+    if (!sectionMedia[index]) return;
+    
+    const media = sectionMedia[index];
     modalMedia.innerHTML = '';
 
     if (media.type === 'image') {
         const img = document.createElement('img');
-        img.src = media.src;
+        img.src = media.url;
         modalMedia.appendChild(img);
     } else {
         const video = document.createElement('video');
@@ -191,25 +226,21 @@ function openModal(index) {
         video.style.width = '100%';
         video.style.height = 'auto';
         const source = document.createElement('source');
-        source.src = media.src;
+        source.src = media.url;
         source.type = 'video/mp4';
         video.appendChild(source);
         modalMedia.appendChild(video);
     }
 
-    modalCaption.textContent = media.label || 'Media';
-    modal.classList.remove('hidden');
+    modalCaption.textContent = media.name;
 }
 
-// Navigation
 function goToPrevious() {
-    currentMediaIndex = (currentMediaIndex - 1 + currentMediaArray.length) % currentMediaArray.length;
-    openModal(currentMediaIndex);
+    // Implementation for previous
 }
 
 function goToNext() {
-    currentMediaIndex = (currentMediaIndex + 1) % currentMediaArray.length;
-    openModal(currentMediaIndex);
+    // Implementation for next
 }
 
 // Close modal
@@ -235,12 +266,21 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Navigation menu
+// Navigation tabs
 navItems.forEach(item => {
     item.addEventListener('click', () => {
         navItems.forEach(nav => nav.classList.remove('active'));
         item.classList.add('active');
-        loadMedia(item.dataset.source);
+        
+        const sectionId = item.dataset.section;
+        
+        if (sectionId === 'all') {
+            mediaSections.forEach(s => s.style.display = 'block');
+        } else {
+            mediaSections.forEach(s => {
+                s.style.display = s.dataset.sectionId === sectionId ? 'block' : 'none';
+            });
+        }
     });
 
     // Cursor hover effect
@@ -254,12 +294,12 @@ navItems.forEach(item => {
 
 // Cursor hover on gallery items
 document.addEventListener('mouseover', (e) => {
-    if (e.target.closest('.gallery-item')) {
+    if (e.target.closest('.gallery-item') || e.target.closest('.nav-item') || e.target.closest('.modal-btn')) {
         cursorDot.classList.add('hover');
     } else {
         cursorDot.classList.remove('hover');
     }
 });
 
-// Load initial media
-loadMedia('mega1');
+// Load media on page load
+loadAllMedia();

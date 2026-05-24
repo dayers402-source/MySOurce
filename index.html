@@ -13,45 +13,69 @@
     <!-- Cursor Dot -->
     <div id="cursor" class="cursor-dot"></div>
     
-    <!-- Navigation Menu -->
-    <nav class="nav-menu">
-        <div class="nav-item active" data-source="mega1" data-label="MEGA Folder 1">
-            <span class="nav-label">MEGA Folder 1</span>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="title">leakz.fun</h1>
+            <p class="subtitle">Media Gallery & Collection</p>
         </div>
-        <div class="nav-item" data-source="mega2" data-label="MEGA Folder 2">
-            <span class="nav-label">MEGA Folder 2</span>
-        </div>
-        <div class="nav-item" data-source="leakz" data-label="leakz.fun">
-            <span class="nav-label">leakz.fun</span>
-        </div>
+    </header>
+    
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <div class="nav-item active" data-section="all">All Media</div>
+        <div class="nav-item" data-section="mega1">MEGA Folder 1</div>
+        <div class="nav-item" data-section="mega2">MEGA Folder 2</div>
+        <div class="nav-item" data-section="leakz">leakz.fun</div>
     </nav>
 
     <!-- Main Container -->
     <div class="container">
-        <!-- Source Title -->
-        <div class="source-title">Browsing: <span id="currentSource">MEGA Folder 1</span></div>
+        <!-- MEGA Folder 1 Section -->
+        <section class="media-section" data-section-id="mega1">
+            <div class="section-header">
+                <h2 class="section-title">📁 MEGA Folder 1</h2>
+                <p class="section-description">Content from: mega.nz/folder/qRkyjTpb</p>
+                <span class="item-count">0 items</span>
+            </div>
+            <div class="gallery mega1-gallery"></div>
+        </section>
 
-        <!-- Loading State -->
-        <div id="loadingSpinner" class="loading-spinner hidden">
-            <div class="spinner"></div>
-            <p>Loading media...</p>
+        <!-- MEGA Folder 2 Section -->
+        <section class="media-section" data-section-id="mega2">
+            <div class="section-header">
+                <h2 class="section-title">📁 MEGA Folder 2</h2>
+                <p class="section-description">Content from: mega.nz/folder/7vonTSbK</p>
+                <span class="item-count">0 items</span>
+            </div>
+            <div class="gallery mega2-gallery"></div>
+        </section>
+
+        <!-- leakz.fun Section -->
+        <section class="media-section" data-section-id="leakz">
+            <div class="section-header">
+                <h2 class="section-title">🌐 leakz.fun</h2>
+                <p class="section-description">Content from: leakz.fun</p>
+                <span class="item-count">0 items</span>
+            </div>
+            <div class="gallery leakz-gallery"></div>
+        </section>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state hidden">
+            <p>📂 No media available. Upload media to the media/ folder.</p>
         </div>
+    </div>
 
-        <!-- Gallery Grid -->
-        <div id="gallery" class="gallery">
-            <!-- Media items will be inserted here -->
-        </div>
-
-        <!-- Modal for full view -->
-        <div id="modal" class="modal hidden">
-            <span class="close-modal">&times;</span>
-            <div class="modal-content">
-                <div id="modalMedia"></div>
-                <p id="modalCaption" class="modal-caption"></p>
-                <div class="modal-nav">
-                    <button id="prevBtn" class="modal-btn">← Previous</button>
-                    <button id="nextBtn" class="modal-btn">Next →</button>
-                </div>
+    <!-- Modal for full view -->
+    <div id="modal" class="modal hidden">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <div id="modalMedia"></div>
+            <p id="modalCaption" class="modal-caption"></p>
+            <div class="modal-nav">
+                <button id="prevBtn" class="modal-btn">← Previous</button>
+                <button id="nextBtn" class="modal-btn">Next →</button>
             </div>
         </div>
     </div>

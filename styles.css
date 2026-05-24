@@ -7,7 +7,7 @@
 body {
     width: 100%;
     height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
     background: #000;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #fff;
@@ -42,49 +42,83 @@ body {
 .cursor-dot.hover {
     width: 20px;
     height: 20px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 1);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 1);
 }
 
-/* Navigation Menu */
-.nav-menu {
+/* Header */
+.header {
     position: fixed;
-    top: 30px;
-    left: 30px;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(10, 20, 30, 0.9));
+    border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 48px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #00ffff, #0099ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #aaa;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+    position: fixed;
+    top: 120px;
+    left: 0;
+    right: 0;
+    z-index: 99;
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    gap: 10px;
+    padding: 15px 20px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+    border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+    overflow-x: auto;
+    backdrop-filter: blur(10px);
 }
 
 .nav-item {
-    padding: 12px 20px;
+    padding: 10px 20px;
     background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 25px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 14px;
 }
 
 .nav-item:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: scale(1.05);
+    background: rgba(0, 255, 255, 0.2);
+    border-color: rgba(0, 255, 255, 0.6);
+    transform: translateY(-2px);
 }
 
 .nav-item.active {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: white;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-}
-
-.nav-label {
-    font-size: 14px;
-    font-weight: 600;
-    white-space: nowrap;
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 150, 255, 0.2));
+    border-color: rgba(0, 255, 255, 0.8);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
 }
 
 /* Container */
@@ -92,41 +126,70 @@ body {
     position: relative;
     z-index: 10;
     width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding-top: 100px;
+    padding-top: 200px;
     padding-left: 20px;
     padding-right: 20px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    padding-bottom: 50px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-/* Source Title */
-.source-title {
-    position: sticky;
-    top: 20px;
-    font-size: 24px;
-    font-weight: 700;
+/* Media Section */
+.media-section {
+    margin-bottom: 80px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section-header {
     margin-bottom: 30px;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 20, 0.95));
-    padding: 15px 20px;
-    border-radius: 10px;
-    border-left: 4px solid white;
-    z-index: 50;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(0, 255, 255, 0.3);
 }
 
-#currentSource {
+.section-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #00ffff, #0099ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-description {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
+    font-family: 'Courier New', monospace;
+}
+
+.item-count {
+    display: inline-block;
+    background: rgba(0, 255, 255, 0.2);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
     color: #00ffff;
-    font-style: italic;
 }
 
 /* Gallery Grid */
 .gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
-    padding-bottom: 50px;
+    margin-bottom: 40px;
 }
 
 /* Gallery Item */
@@ -137,15 +200,16 @@ body {
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(0, 255, 255, 0.3);
     transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 255, 255, 0.05);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .gallery-item:hover {
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    border-color: rgba(0, 255, 255, 0.8);
+    transform: scale(1.08);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
 }
 
 .gallery-item img,
@@ -155,20 +219,22 @@ body {
     object-fit: cover;
 }
 
-.gallery-item-label {
+.gallery-item-overlay {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-    padding: 15px;
-    font-size: 12px;
-    color: #ccc;
+    bottom: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.9));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 12px;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
-.gallery-item:hover .gallery-item-label {
+.gallery-item:hover .gallery-item-overlay {
     opacity: 1;
 }
 
@@ -176,45 +242,33 @@ body {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 6px 12px;
     border-radius: 15px;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     color: #00ffff;
+    border: 1px solid rgba(0, 255, 255, 0.5);
 }
 
-/* Loading Spinner */
-.loading-spinner {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 500;
+.gallery-item-label {
+    font-size: 12px;
+    color: #ccc;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Empty State */
+.empty-state {
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    padding: 80px 20px;
+    font-size: 18px;
+    color: #666;
 }
 
-.loading-spinner.hidden {
+.empty-state.hidden {
     display: none;
-}
-
-.spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid rgba(255, 255, 255, 0.2);
-    border-top: 4px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
 }
 
 /* Modal */
@@ -224,7 +278,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(0, 0, 0, 0.98);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -244,6 +298,7 @@ body {
     cursor: pointer;
     color: white;
     transition: color 0.3s ease;
+    z-index: 1001;
 }
 
 .close-modal:hover {
@@ -274,6 +329,7 @@ body {
     max-width: 100%;
     max-height: 100%;
     border-radius: 10px;
+    border: 2px solid rgba(0, 255, 255, 0.3);
 }
 
 .modal-caption {
@@ -290,70 +346,91 @@ body {
 }
 
 .modal-btn {
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: white;
+    padding: 12px 24px;
+    background: rgba(0, 255, 255, 0.1);
+    border: 2px solid rgba(0, 255, 255, 0.4);
+    color: #00ffff;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
+    font-size: 14px;
 }
 
 .modal-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: white;
+    background: rgba(0, 255, 255, 0.2);
+    border-color: #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
 }
 
 /* Scrollbar Styling */
-.container::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 8px;
 }
 
-.container::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background: transparent;
 }
 
-.container::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 255, 0.3);
     border-radius: 10px;
 }
 
-.container::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 255, 0.6);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .nav-menu {
-        top: 15px;
-        left: 15px;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 10px;
+    .title {
+        font-size: 32px;
     }
 
-    .nav-item {
-        padding: 8px 12px;
-    }
-
-    .nav-label {
+    .subtitle {
         font-size: 12px;
     }
 
-    .source-title {
-        font-size: 18px;
-        top: 10px;
+    .header {
+        padding: 15px;
+    }
+
+    .nav-tabs {
+        top: 100px;
+        gap: 8px;
+        padding: 10px 15px;
+    }
+
+    .nav-item {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+
+    .container {
+        padding-top: 180px;
+    }
+
+    .section-title {
+        font-size: 24px;
     }
 
     .gallery {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 10px;
-        padding-left: 10px;
-        padding-right: 10px;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 24px;
     }
 
-    .container {
-        padding-top: 80px;
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+    }
+
+    .section-header {
+        margin-bottom: 20px;
     }
 }
